@@ -24,13 +24,13 @@ function getMem(txt){
 }
 
 function updateBadge(txt){
-    chrome.browserAction.setBadgeBackgroundColor({ color: [255, 0, 0, 255] });
+    chrome.browserAction.setBadgeBackgroundColor({ color: [4, 171, 239, 205] });
     chrome.browserAction.setBadgeText({text:String(txt)});
 }
 
 //chrome.browserAction.onClicked.addListener(getAccess);
 getAccess();
-
+setInterval(getAccess(),60000);
 
 
 
