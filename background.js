@@ -27,4 +27,4 @@ function updateBadge(txt){
 
 //chrome.browserAction.onClicked.addListener(getAccess);
 getAccess();
-setInterval(getAccess,60000);
+setInterval(getAccess,600);
