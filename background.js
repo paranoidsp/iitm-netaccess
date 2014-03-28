@@ -1,12 +1,9 @@
 
 function getAccess(){
-    //$.ajax({url: "net"})
     var req = new XMLHttpRequest();
     req.onreadystatechange = function() {
         if (req.readyState == 4) {
             updateBadge(getMem(req.responseText));
-            //updateBadge("Hello");//getMem(req.responseText));
-            //alert(req.responseText);
         }
     }
     req.open("GET", 'https://netaccess.iitm.ac.in/', true);
@@ -30,7 +27,4 @@ function updateBadge(txt){
 
 //chrome.browserAction.onClicked.addListener(getAccess);
 getAccess();
-setInterval(getAccess(),60000);
-
-
-
+setInterval(getAccess,60000);
