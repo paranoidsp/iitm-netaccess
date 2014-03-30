@@ -33,3 +33,6 @@ var getNetAccess = {
 document.addEventListener('DOMContentLoaded', function () {
   getNetAccess.getData();
 });
+
+function getLoginStat(){
+}

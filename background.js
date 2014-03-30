@@ -12,6 +12,11 @@ function getAccess(){
 
 function getMem(txt){
     var a = String(txt).match(/\d*\.\d*\sMB/);
+    
+    // TODO: 
+    // Correct this
+    if(a==null)
+        return b;
     var b = String(a);
     //var b = a.substring(0,4);
     if(b.substring(3,4) == "."){
@@ -25,6 +30,11 @@ function updateBadge(txt){
     chrome.browserAction.setBadgeText({text:String(txt)});
 }
 
-//chrome.browserAction.onClicked.addListener(getAccess);
+function showNetAccess(){
+    chrome.windows.create({'url': 'https://netaccess.iitm.ac.in/','type': 'popup'},function(window) {
+            });
+}
+
+chrome.browserAction.onClicked.addListener(showNetAccess);
 getAccess();
 setInterval(getAccess,60000);
