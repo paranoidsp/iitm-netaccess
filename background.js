@@ -1,20 +1,66 @@
+var txt_actual = localStorage["txt_actual"];
+//localStorage['username'] = '';
+//localStorage['password'] = '';
+var username = localStorage["username"];
+var password = localStorage["password"];
+var tries = 0;
+var snd = '';
+
+if ((typeof username == 'undefined') || (typeof password == 'undefined')){
+    localStorage['username'] = prompt("Username: ");
+    localStorage['password'] = prompt("Password: ");
+    chrome.tabs.create({url:"popup.html"}) ;
+}
+if ((username == '') || (password == '')){
+    localStorage['username'] = prompt("Username: ");
+    localStorage['password'] = prompt("Password: ");
+    chrome.tabs.create({url:"popup.html"}) ;
+}
+
+function getUsername(){
+    return localStorage['username'];
+}
+
+function getPassword(){
+    return localStorage['password'];
+}
+
+
 function getAccess(){
+
+
     var req = new XMLHttpRequest();
     req.onreadystatechange = function() 
     {
         if (req.readyState == 4) 
         {
-            var txt_actual = getMem(req.responseText);
-            if(txt_actual < 500)
+            txt_actual = getMem(req.responseText);
+            if(txt_actual < 500){
                 updateBadge(txt_actual,1);
-            else if (txt_actual < 800)
+                tries = 0;
+                localStorage['run'] = 1;
+            }
+            else if(txt_actual < 800){
                 updateBadge(txt_actual,2);
-            else if (txt_actual < 1028)
+                tries = 0;
+                localStorage['run'] = 1;
+            }
+            else if(txt_actual < 1028){
                 updateBadge(txt_actual,3);
+                tries = 0;
+                localStorage['run'] = 1;
+            }
             else
             {
-                updateBadge("Not Logged In",3);
-                doLogin("ee11b097","Pap&97");
+                // This var makes sure the extension doesn't get stuck when
+                // you're not connected to the net.
+                tries = tries + 1;
+                if(tries<10){
+                    updateBadge("Trying to Log In",3);
+                    doLogin();
+                }
+                else
+                    updateBadge("Not Logged In",3);
             }
         }
     }
@@ -24,7 +70,7 @@ function getAccess(){
 
 function getMem(txt){
     var a = String(txt).match(/\d*\.\d*\sMB/);
-    
+
     // TODO: 
     // Correct this
     if(a==null)
@@ -61,12 +107,12 @@ function doLogin(user, pass){
         if(log.readyState == 4){
             updateBadge("Logged In",1);
             getAccess();
-
         }
     }
     log.open("POST",'https://netaccess.iitm.ac.in/account/login',true);
     log.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-    log.send("userLogin=ee11b097&userPassword=Pap%2697&submit=");
+    snd = "userLogin=" + encodeURIComponent(localStorage['username'])+"&userPassword="+encodeURIComponent(localStorage['password'])+"&submit=";
+    log.send(snd);
 }
 
 function showNetAccess(){
@@ -74,6 +120,10 @@ function showNetAccess(){
             });
 }
 
-chrome.browserAction.onClicked.addListener(showNetAccess);
+function showData(){
+    document.write("Username: " + localStorage['username']+" <br>Password: " + localStorage['password'] +"<br>Tries: " + String(tries) + "<br>Mem: " + String(mem) + "<br>Sent: " + String(snd));
+}
+
+//chrome.browserAction.onClicked.addListener(showData);
 getAccess();
 setInterval(getAccess,6000);
